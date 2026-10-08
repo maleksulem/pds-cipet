@@ -1,0 +1,6 @@
+{
+  "name": "Power Consumption Forecasting and Analytics System",
+  "description": "Production-grade power consumption forecasting and analytics system providing telemetry data cleaning, statistical modeling, probability distributions, hypothesis testing, visualization, and machine learning load prediction.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,12 @@
+[2026-09-10 17:59:08] ACTION: LOAD_DATASET_SUCCESS | DETAILS: Loaded 362 rows from power_consumption.csv
+[2026-09-10 17:59:08] ACTION: PREPROCESSING_COMPLETE | DETAILS: Initial: 362, Missing: 2, Dups: 2, Outliers: 2, Final: 360
+[2026-09-10 17:59:08] ACTION: MODEL_SAVED_PICKLE | DETAILS: Saved model to power_model.pkl
+[2026-09-10 17:59:08] ACTION: MODEL_TRAINED | DETAILS: Samples=360, MAE=7.06, RMSE=9.83, R2=0.8214
+[2026-09-10 17:59:10] ACTION: PLOTS_GENERATED | DETAILS: Generated 6 analytical plots in /app/applet/static/plots
+[2026-09-10 17:59:10] ACTION: SYSTEM_INITIALIZED | DETAILS: Pipeline executed and server prepared.
+[2026-09-10 18:03:21] ACTION: LOAD_DATASET_SUCCESS | DETAILS: Loaded 362 rows from power_consumption.csv
+[2026-09-10 18:03:21] ACTION: PREPROCESSING_COMPLETE | DETAILS: Initial: 362, Missing: 2, Dups: 2, Outliers: 2, Final: 360
+[2026-09-10 18:03:21] ACTION: MODEL_SAVED_PICKLE | DETAILS: Saved model to power_model.pkl
+[2026-09-10 18:03:21] ACTION: MODEL_TRAINED | DETAILS: Samples=360, MAE=7.06, RMSE=9.83, R2=0.8214
+[2026-09-10 18:03:23] ACTION: PLOTS_GENERATED | DETAILS: Generated 6 analytical plots in /app/applet/static/plots
+[2026-09-10 18:03:23] ACTION: SYSTEM_INITIALIZED | DETAILS: Pipeline executed and server prepared.

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Power Consumption Forecasting & Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-top">
+            <a href="/" class="brand-title">
+                ⚡ Power Consumption Forecasting & Analytics
+            </a>
+            <div style="font-size: 0.85rem; color: #94a3b8;">
+                Pure Python Standard Library Server
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="nav-link active">Dashboard</a>
+                <a href="/data" class="nav-link">Data Inspection</a>
+                <a href="/preprocessing" class="nav-link">Preprocessing</a>
+                <a href="/statistics" class="nav-link">Statistics & Inference</a>
+                <a href="/visualizations" class="nav-link">Visualizations</a>
+                <a href="/forecast" class="nav-link">ML Forecast</a>
+                <a href="/records" class="nav-link">CRUD Records</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Executive System Dashboard</h1>
+            <p>Enterprise Energy Grid Intelligence: End-to-end electrical load intelligence, statistical modeling, and machine learning forecasting.</p>
+        </div>
+
+        <!-- Pipeline Workflow Ribbon -->
+        <div class="pipeline-ribbon">
+            <div class="pipeline-step completed">1. Raw CSV Data</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step completed">2. Web Scraping & Merge</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step completed">3. Data Preprocessing</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step completed">4. NumPy / SciPy Stats</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step completed">5. Hypothesis Testing</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step completed">6. Matplotlib Viz</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step completed">7. Scikit-learn ML</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step completed">8. Real-time Forecast</div>
+        </div>
+
+        <!-- Key Metrics Cards -->
+        <div class="grid-4" id="metrics-grid">
+            <div class="metric-box">
+                <div class="metric-label">Total Observations</div>
+                <div class="metric-value" id="metric-records">--</div>
+                <div class="metric-sub">Hourly load records in dataset</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Average Consumption</div>
+                <div class="metric-value" id="metric-avg">-- <span style="font-size: 1rem; color: #64748b;">kWh</span></div>
+                <div class="metric-sub">Mean power usage per hour</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Peak Demand</div>
+                <div class="metric-value" id="metric-max" style="color: #b91c1c;">-- <span style="font-size: 1rem; color: #64748b;">kWh</span></div>
+                <div class="metric-sub">Maximum observed hourly load</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">ML Model Accuracy</div>
+                <div class="metric-value" id="metric-r2" style="color: #15803d;">--</div>
+                <div class="metric-sub" id="metric-r2-sub">R² Score on test split</div>
+            </div>
+        </div>
+
+        <!-- Quick Module Navigation Cards -->
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-title">
+                    <span>📊 Data Analysis & Inspection</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Inspect dataset shapes, column datatypes, missing values, duplicates, and BeautifulSoup weather table scraping.
+                </p>
+                <a href="/data" class="btn btn-secondary btn-sm">Inspect Dataset →</a>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>🧹 Data Preprocessing</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Review missing value imputation, duplicate removal, IQR outlier detection and boundary capping, and scaling.
+                </p>
+                <a href="/preprocessing" class="btn btn-secondary btn-sm">View Pipeline →</a>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>📈 Statistics & Inference</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Examine NumPy percentiles, SciPy skewness/kurtosis, 95% Confidence Intervals, CLT simulation, and t-tests.
+                </p>
+                <a href="/statistics" class="btn btn-secondary btn-sm">View Statistics →</a>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>📉 Analytical Visualizations</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    View Matplotlib & Seaborn plots including time-series, histograms with KDE, bivariate regression, and correlation heatmaps.
+                </p>
+                <a href="/visualizations" class="btn btn-secondary btn-sm">View Graphs →</a>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>🔮 ML Load Forecasting</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Enter temperature, hour, and previous demand to predict next-hour power consumption using Scikit-learn Linear Regression.
+                </p>
+                <a href="/forecast" class="btn btn-primary btn-sm">Launch Predictor →</a>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>📁 CRUD Records Manager</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Add, view, search, update, and delete power consumption entries in CSV and MySQL, plus view text activity logs.
+                </p>
+                <a href="/records" class="btn btn-secondary btn-sm">Manage Records →</a>
+            </div>
+        </div>
+
+        <!-- Academic Information Box -->
+        <div class="card" style="margin-top: 1rem; border-left: 4px solid var(--primary);">
+            <div class="card-title"> Academic Compliance Summary (BE05000231)</div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                This system satisfies all 21 practical laboratory tasks and core syllabus objectives using pure Python standard library for backend serving, NumPy for numerical operations, Pandas for tabular analytics, SciPy for probability and inferential tests, BeautifulSoup for scraping, Seaborn for visualizations, and Scikit-learn for machine learning.
+            </p>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem;">
+                <span class="brand-badge">No Flask/Django</span>
+                <span class="brand-badge">Offline Capable</span>
+                <span class="brand-badge">CSV & MySQL CRUD</span>
+                <span class="brand-badge">Pickle Serialization</span>
+                <span class="brand-badge">Hypothesis Testing</span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>Power Consumption Forecasting & Analytics System | Power Consumption Forecasting and Analytics</p>
+        <p>Subject Code: BE05000231 (Python for Data Science) | Built for Clarity and Viva Demonstration</p>
+    </footer>
+
+    <script>
+        // Fetch dashboard summary metrics on load
+        fetch('/api/dashboard-summary')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('metric-records').innerText = data.total_records;
+                    document.getElementById('metric-avg').innerHTML = data.average_consumption + ' <span style="font-size: 1rem; color: #64748b;">kWh</span>';
+                    document.getElementById('metric-max').innerHTML = data.max_consumption + ' <span style="font-size: 1rem; color: #64748b;">kWh</span>';
+                    document.getElementById('metric-r2').innerText = (data.model_r2 * 100).toFixed(1) + '%';
+                    document.getElementById('metric-r2-sub').innerText = 'R² Score: ' + data.model_r2 + ' (MAE: ' + data.model_mae + ' kWh)';
+                }
+            })
+            .catch(err => {
+                console.log('Dashboard summary fetch info:', err);
+            });
+    </script>
+</body>
+</html>

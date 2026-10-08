@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Preprocessing - Power Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-top">
+            <a href="/" class="brand-title">
+                ⚡ Power Consumption Forecasting & Analytics
+            </a>
+            <div style="font-size: 0.85rem; color: #94a3b8;">
+                Pure Python Standard Library Server
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/data" class="nav-link">Data Inspection</a>
+                <a href="/preprocessing" class="nav-link active">Preprocessing</a>
+                <a href="/statistics" class="nav-link">Statistics & Inference</a>
+                <a href="/visualizations" class="nav-link">Visualizations</a>
+                <a href="/forecast" class="nav-link">ML Forecast</a>
+                <a href="/records" class="nav-link">CRUD Records</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Data Cleaning & Preprocessing Pipeline</h1>
+            <p>Practical 15: Handling missing values, duplicate elimination, IQR outlier detection & capping, and normalization.</p>
+        </div>
+
+        <!-- Before vs After Audit Grid -->
+        <div class="grid-4">
+            <div class="metric-box">
+                <div class="metric-label">Raw Initial Rows</div>
+                <div class="metric-value" id="prep-initial">--</div>
+                <div class="metric-sub">Before cleaning operations</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Missing Values Imputed</div>
+                <div class="metric-value" id="prep-missing" style="color: #b45309;">--</div>
+                <div class="metric-sub">Median-imputed values</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Duplicates Eliminated</div>
+                <div class="metric-value" id="prep-duplicates" style="color: #b91c1c;">--</div>
+                <div class="metric-sub">df.drop_duplicates()</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Outliers Detected (IQR)</div>
+                <div class="metric-value" id="prep-outliers" style="color: #6366f1;">--</div>
+                <div class="metric-sub">Capped at IQR boundaries</div>
+            </div>
+        </div>
+
+        <!-- Detailed Pipeline Explanations -->
+        <div class="grid-2">
+            <!-- Outlier IQR Section -->
+            <div class="card">
+                <div class="card-title">1. Outlier Detection via Interquartile Range (IQR)</div>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                    Extreme spikes (e.g. sensor surge) and drops distort machine learning regression lines. 
+                    The IQR method calculates statistical fences to isolate and cap anomalies.
+                </p>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <tbody>
+                            <tr>
+                                <td><strong>First Quartile (Q1 - 25th percentile)</strong></td>
+                                <td id="iqr-q1">-- kWh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Third Quartile (Q3 - 75th percentile)</strong></td>
+                                <td id="iqr-q3">-- kWh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Interquartile Range (IQR = Q3 - Q1)</strong></td>
+                                <td id="iqr-val">-- kWh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lower Bound (Q1 - 1.5 * IQR)</strong></td>
+                                <td id="iqr-lower" style="color: #b91c1c;">-- kWh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Upper Bound (Q3 + 1.5 * IQR)</strong></td>
+                                <td id="iqr-upper" style="color: #b91c1c;">-- kWh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Treatment Strategy</strong></td>
+                                <td>Winsorization / Boundary Capping (Preserves record count without skewing weights)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Normalization & Feature Engineering -->
+            <div class="card">
+                <div class="card-title">2. Normalization & Feature Engineering</div>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                    Demonstration of scaling formulas and cyclical engineered features:
+                </p>
+                <div class="alert alert-info" style="font-size: 0.85rem; margin-bottom: 1rem;">
+                    <strong>Min-Max Scaling:</strong> <code>x_scaled = (x - min) / (max - min)</code> &rarr; Maps values to range [0, 1].<br>
+                    <strong>Z-Score Standardization:</strong> <code>z = (x - mean) / std</code> &rarr; Centers distribution at mean=0, std=1.
+                </div>
+                <ul style="font-size: 0.875rem; color: var(--text-muted); padding-left: 1.25rem; line-height: 1.8;">
+                    <li><strong>is_weekend:</strong> Binary flag (1 for Saturday & Sunday, 0 for weekdays).</li>
+                    <li><strong>is_peak_hour:</strong> Binary flag (1 for morning 8–11 & evening 18–21 demand spikes).</li>
+                    <li><strong>previous_consumption:</strong> Autoregressive 1-hour temporal lag feature.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Before & After Comparison Table -->
+        <div class="card">
+            <div class="card-title">Cleaned Sample Records (After Preprocessing)</div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Hour</th>
+                            <th>Temp (°C)</th>
+                            <th>Previous (kWh)</th>
+                            <th>Consumption (kWh)</th>
+                            <th>Weekend Flag</th>
+                            <th>Peak Flag</th>
+                            <th>Min-Max Scaled</th>
+                            <th>Z-Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clean-sample-tbody">
+                        <tr><td colspan="9" style="text-align: center;">Loading preprocessed rows...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>Power Consumption Forecasting & Analytics System | Power Consumption Forecasting and Analytics</p>
+        <p>Subject Code: BE05000231 (Python for Data Science)</p>
+    </footer>
+
+    <script>
+        fetch('/api/preprocessing-summary')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const s = data.summary;
+                    document.getElementById('prep-initial').innerText = s.initial_records;
+                    document.getElementById('prep-missing').innerText = s.missing_values_imputed;
+                    document.getElementById('prep-duplicates').innerText = s.duplicates_removed;
+                    document.getElementById('prep-outliers').innerText = s.outliers_detected;
+
+                    document.getElementById('iqr-q1').innerText = s.outlier_iqr_stats.q1_25th + ' kWh';
+                    document.getElementById('iqr-q3').innerText = s.outlier_iqr_stats.q3_75th + ' kWh';
+                    document.getElementById('iqr-val').innerText = s.outlier_iqr_stats.iqr + ' kWh';
+                    document.getElementById('iqr-lower').innerText = s.outlier_iqr_stats.lower_bound + ' kWh';
+                    document.getElementById('iqr-upper').innerText = s.outlier_iqr_stats.upper_bound + ' kWh';
+
+                    const tbody = document.getElementById('clean-sample-tbody');
+                    tbody.innerHTML = '';
+                    data.clean_sample.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.date}</td>
+                            <td>${row.hour}:00</td>
+                            <td>${row.temperature}</td>
+                            <td>${row.previous_consumption}</td>
+                            <td><strong>${row.consumption}</strong></td>
+                            <td>${row.is_weekend ? '<span class="brand-badge">Weekend</span>' : 'Weekday'}</td>
+                            <td>${row.is_peak_hour ? '<span class="brand-badge" style="background-color:#991b1b;">Peak</span>' : 'Normal'}</td>
+                            <td><code>${row.consumption_minmax !== undefined ? Number(row.consumption_minmax).toFixed(3) : ''}</code></td>
+                            <td><code>${row.consumption_zscore !== undefined ? Number(row.consumption_zscore).toFixed(2) : ''}</code></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            })
+            .catch(err => console.error('Preprocessing fetch error:', err));
+    </script>
+</body>
+</html>

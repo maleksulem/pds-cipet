@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizations - Power Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-top">
+            <a href="/" class="brand-title">
+                ⚡ Power Consumption Forecasting & Analytics
+            </a>
+            <div style="font-size: 0.85rem; color: #94a3b8;">
+                Pure Python Standard Library Server
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/data" class="nav-link">Data Inspection</a>
+                <a href="/preprocessing" class="nav-link">Preprocessing</a>
+                <a href="/statistics" class="nav-link">Statistics & Inference</a>
+                <a href="/visualizations" class="nav-link active">Visualizations</a>
+                <a href="/forecast" class="nav-link">ML Forecast</a>
+                <a href="/records" class="nav-link">CRUD Records</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1>Matplotlib & Seaborn Visualizations</h1>
+                <p>Practicals 16, 17, 18, 19: Time series, univariate distributions, bivariate regressions, load profiles, and CLT curves.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btn-regen" onclick="regeneratePlots()">
+                🔄 Regenerate All Plots
+            </button>
+        </div>
+
+        <div id="regen-alert" class="alert alert-info" style="display: none;"></div>
+
+        <!-- 2-column Grid of Plots -->
+        <div class="grid-2">
+            <!-- 1. Time Series Plot -->
+            <div class="plot-container">
+                <img id="img-p1" src="/static/plots/consumption_time_series.png" alt="Consumption Time Series" onerror="this.src='/static/plots/placeholder.png';">
+                <div class="plot-meta">
+                    <h3>1. Historical Power Demand Timeline (Time Series)</h3>
+                    <p>Continuous hourly load sequence illustrating baseline load, cyclic peaks, and mean reference threshold.</p>
+                </div>
+            </div>
+
+            <!-- 2. Univariate Distribution -->
+            <div class="plot-container">
+                <img id="img-p2" src="/static/plots/consumption_distribution.png" alt="Consumption Distribution" onerror="this.src='/static/plots/placeholder.png';">
+                <div class="plot-meta">
+                    <h3>2. Univariate Consumption Distribution (Hist + KDE)</h3>
+                    <p>Histogram with Kernel Density Estimation (KDE) curve, contrasting mean and median central tendencies.</p>
+                </div>
+            </div>
+
+            <!-- 3. Bivariate Temperature vs Consumption -->
+            <div class="plot-container">
+                <img id="img-p3" src="/static/plots/temperature_vs_consumption.png" alt="Temperature vs Consumption" onerror="this.src='/static/plots/placeholder.png';">
+                <div class="plot-meta">
+                    <h3>3. Bivariate Relationship: Temperature vs. Load</h3>
+                    <p>Scatter plot with fitted linear regression trend line depicting direct thermal correlation with electrical power demand.</p>
+                </div>
+            </div>
+
+            <!-- 4. Diurnal 24-Hour Load Profile -->
+            <div class="plot-container">
+                <img id="img-p4" src="/static/plots/hourly_consumption_pattern.png" alt="Hourly Consumption Pattern" onerror="this.src='/static/plots/placeholder.png';">
+                <div class="plot-meta">
+                    <h3>4. Diurnal Pattern: Average Consumption by Hour</h3>
+                    <p>24-hour load profile showcasing nighttime minimums (01:00-05:00) and evening peak hours (18:00-21:00).</p>
+                </div>
+            </div>
+
+            <!-- 5. Correlation Heatmap -->
+            <div class="plot-container">
+                <img id="img-p5" src="/static/plots/correlation_heatmap.png" alt="Correlation Matrix Heatmap" onerror="this.src='/static/plots/placeholder.png';">
+                <div class="plot-meta">
+                    <h3>5. Correlation Heatmap (Seaborn)</h3>
+                    <p>Pearson correlation coefficient grid evaluating collinearity between temporal, environmental, and load variables.</p>
+                </div>
+            </div>
+
+            <!-- 6. Central Limit Theorem Sampling Curve -->
+            <div class="plot-container">
+                <img id="img-p6" src="/static/plots/clt_sampling_distribution.png" alt="CLT Sampling Distribution" onerror="this.src='/static/plots/placeholder.png';">
+                <div class="plot-meta">
+                    <h3>6. Central Limit Theorem (CLT) Gaussian Distribution</h3>
+                    <p>Empirical distribution of 500 repeated sample means (n=30) demonstrating normal convergence.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>Power Consumption Forecasting & Analytics System | Power Consumption Forecasting and Analytics</p>
+        <p>Subject Code: BE05000231 (Python for Data Science)</p>
+    </footer>
+
+    <script>
+        function regeneratePlots() {
+            const btn = document.getElementById('btn-regen');
+            const alertBox = document.getElementById('regen-alert');
+            btn.disabled = true;
+            btn.innerText = 'Rendering plots in Matplotlib...';
+            alertBox.style.display = 'block';
+            alertBox.className = 'alert alert-info';
+            alertBox.innerText = 'Executing Matplotlib and Seaborn plotting engine...';
+
+            fetch('/api/generate-plots', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerText = '🔄 Regenerate All Plots';
+                    if (data.success) {
+                        alertBox.className = 'alert alert-success';
+                        alertBox.innerText = 'Successfully regenerated and saved all 6 figures to static/plots/.';
+                        
+                        // Force image reload with timestamp cache-buster
+                        const t = new Date().getTime();
+                        ['img-p1', 'img-p2', 'img-p3', 'img-p4', 'img-p5', 'img-p6'].forEach(id => {
+                            const img = document.getElementById(id);
+                            if (img) {
+                                const base = img.src.split('?')[0];
+                                img.src = base + '?t=' + t;
+                            }
+                        });
+                    } else {
+                        alertBox.className = 'alert alert-danger';
+                        alertBox.innerText = 'Plot generation failed: ' + data.error;
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = '🔄 Regenerate All Plots';
+                    alertBox.className = 'alert alert-danger';
+                    alertBox.innerText = 'Request error: ' + err;
+                });
+        }
+    </script>
+</body>
+</html>

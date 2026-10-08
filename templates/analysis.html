@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis & Inspection - Power Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-top">
+            <a href="/" class="brand-title">
+                ⚡ Power Consumption Forecasting & Analytics
+            </a>
+            <div style="font-size: 0.85rem; color: #94a3b8;">
+                Pure Python Standard Library Server
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/data" class="nav-link active">Data Inspection</a>
+                <a href="/preprocessing" class="nav-link">Preprocessing</a>
+                <a href="/statistics" class="nav-link">Statistics & Inference</a>
+                <a href="/visualizations" class="nav-link">Visualizations</a>
+                <a href="/forecast" class="nav-link">ML Forecast</a>
+                <a href="/records" class="nav-link">CRUD Records</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Data Inspection & Web Scraping Exploration</h1>
+            <p>Practical 1, 13, 14: Inspecting raw power consumption attributes and merging scraped weather observations.</p>
+        </div>
+
+        <!-- High-level Dataset Dimensions -->
+        <div class="grid-4">
+            <div class="metric-box">
+                <div class="metric-label">Dataset Rows</div>
+                <div class="metric-value" id="inspect-rows">--</div>
+                <div class="metric-sub">df.shape[0]</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Dataset Columns</div>
+                <div class="metric-value" id="inspect-cols">--</div>
+                <div class="metric-sub">df.shape[1]</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Missing Cells</div>
+                <div class="metric-value" id="inspect-missing" style="color: #b45309;">--</div>
+                <div class="metric-sub">df.isnull().sum()</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Duplicate Rows</div>
+                <div class="metric-value" id="inspect-duplicates" style="color: #b91c1c;">--</div>
+                <div class="metric-sub">df.duplicated().sum()</div>
+            </div>
+        </div>
+
+        <!-- Sample Records Head View -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-title">
+                <span>First 5 Sample Records (df.head())</span>
+                <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">Pandas head() inspection</span>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table" id="head-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Hour</th>
+                            <th>Day</th>
+                            <th>Month</th>
+                            <th>Day of Week</th>
+                            <th>Temperature (°C)</th>
+                            <th>Previous Load (kWh)</th>
+                            <th>Consumption (kWh)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="head-tbody">
+                        <tr><td colspan="9" style="text-align:center;">Loading dataset preview...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Column Schema & Datatypes -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-title">Column Schema & Data Types (df.dtypes)</div>
+            <div class="table-responsive">
+                <table class="data-table" id="schema-table">
+                    <thead>
+                        <tr>
+                            <th>Column Name</th>
+                            <th>Data Type</th>
+                            <th>Domain Meaning</th>
+                            <th>Missing Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schema-tbody">
+                        <!-- Dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- BeautifulSoup Web Scraping Demonstration (Practical 14) -->
+        <div class="card">
+            <div class="card-title">
+                <span>🌐 BeautifulSoup Web Scraping & DataFrame Merge (Practical 14)</span>
+                <button class="btn btn-primary btn-sm" id="btn-run-scrape" onclick="triggerScrapeMerge()">Run Web Scraping Demo</button>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Demonstrates parsing HTML tabular data from <code>data/sample_weather.html</code> using BeautifulSoup 
+                (extracting ambient temperature, humidity, and wind speed), converting to a Pandas DataFrame, and merging with the power load dataset via <code>pd.merge()</code>.
+            </p>
+            <div id="scrape-status" class="alert alert-info" style="display: none;"></div>
+            <div class="table-responsive" id="scrape-table-wrapper" style="display: none;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Hour</th>
+                            <th>Power Load (kWh)</th>
+                            <th>Scraped Temp (°C)</th>
+                            <th>Relative Humidity (%)</th>
+                            <th>Wind Speed (km/h)</th>
+                            <th>Condition</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scrape-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>Power Consumption Forecasting & Analytics System | Power Consumption Forecasting and Analytics</p>
+        <p>Subject Code: BE05000231 (Python for Data Science)</p>
+    </footer>
+
+    <script>
+        fetch('/api/data-inspection')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('inspect-rows').innerText = data.num_rows;
+                    document.getElementById('inspect-cols').innerText = data.num_columns;
+                    document.getElementById('inspect-missing').innerText = data.total_missing;
+                    document.getElementById('inspect-duplicates').innerText = data.duplicate_rows;
+
+                    // Populate head table
+                    const tbody = document.getElementById('head-tbody');
+                    tbody.innerHTML = '';
+                    data.head_sample.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.date || ''}</td>
+                            <td>${row.time || ''}</td>
+                            <td>${row.hour}</td>
+                            <td>${row.day}</td>
+                            <td>${row.month}</td>
+                            <td>${row.day_of_week}</td>
+                            <td>${row.temperature !== undefined ? row.temperature : ''}</td>
+                            <td>${row.previous_consumption !== undefined ? row.previous_consumption : ''}</td>
+                            <td><strong>${row.consumption !== undefined ? row.consumption : ''}</strong></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    // Populate schema table
+                    const schemaTbody = document.getElementById('schema-tbody');
+                    schemaTbody.innerHTML = '';
+                    const domainNotes = {
+                        "date": "Calendar observation date (YYYY-MM-DD)",
+                        "time": "Timestamp of hourly observation (HH:MM:SS)",
+                        "hour": "Discrete 24-hour index (0 to 23)",
+                        "day": "Day of the month (1 to 31)",
+                        "month": "Month integer (1 for January)",
+                        "day_of_week": "0=Monday to 6=Sunday",
+                        "temperature": "Ambient environmental temperature in Celsius",
+                        "previous_consumption": "Autoregressive lag: previous hour load (kWh)",
+                        "consumption": "Target variable: actual power consumed (kWh)"
+                    };
+
+                    for (const [col, dtype] of Object.entries(data.column_types)) {
+                        const tr = document.createElement('tr');
+                        const missingCount = data.missing_counts[col] || 0;
+                        tr.innerHTML = `
+                            <td><code>${col}</code></td>
+                            <td>${dtype}</td>
+                            <td>${domainNotes[col] || 'Feature attribute'}</td>
+                            <td style="${missingCount > 0 ? 'color: #b91c1c; font-weight: bold;' : ''}">${missingCount}</td>
+                        `;
+                        schemaTbody.appendChild(tr);
+                    }
+                }
+            })
+            .catch(err => console.error('Inspection error:', err));
+
+        function triggerScrapeMerge() {
+            const statusDiv = document.getElementById('scrape-status');
+            const wrapper = document.getElementById('scrape-table-wrapper');
+            const tbody = document.getElementById('scrape-tbody');
+            
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'alert alert-info';
+            statusDiv.innerText = 'Parsing data/sample_weather.html via BeautifulSoup and merging with power DataFrame...';
+
+            fetch('/api/scrape-weather')
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        statusDiv.className = 'alert alert-success';
+                        statusDiv.innerText = `Successfully scraped ${res.summary.scraped_rows} weather records and matched ${res.summary.matched_rows} rows into the power DataFrame via pd.merge(how='left').`;
+                        
+                        tbody.innerHTML = '';
+                        res.sample.forEach(item => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${item.date}</td>
+                                <td>${item.hour}:00</td>
+                                <td><strong>${item.consumption} kWh</strong></td>
+                                <td>${item.scraped_temp} °C</td>
+                                <td>${item.humidity_percent}%</td>
+                                <td>${item.wind_speed_kmh} km/h</td>
+                                <td><span class="brand-badge">${item.weather_condition}</span></td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                        wrapper.style.display = 'block';
+                    } else {
+                        statusDiv.className = 'alert alert-danger';
+                        statusDiv.innerText = 'Scraping error: ' + res.error;
+                    }
+                })
+                .catch(err => {
+                    statusDiv.className = 'alert alert-danger';
+                    statusDiv.innerText = 'Request failed: ' + err;
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Operations & Records - Power Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-top">
+            <a href="/" class="brand-title">
+                ⚡ Power Consumption Forecasting & Analytics
+            </a>
+            <div style="font-size: 0.85rem; color: #94a3b8;">
+                Pure Python Standard Library Server
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/data" class="nav-link">Data Inspection</a>
+                <a href="/preprocessing" class="nav-link">Preprocessing</a>
+                <a href="/statistics" class="nav-link">Statistics & Inference</a>
+                <a href="/visualizations" class="nav-link">Visualizations</a>
+                <a href="/forecast" class="nav-link">ML Forecast</a>
+                <a href="/records" class="nav-link active">CRUD Records</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>CRUD Records & File Management</h1>
+            <p>Practicals 8, 9, 10: Text-file logging, CSV records operations, and MySQL relational database management.</p>
+        </div>
+
+        <!-- Section 1: CSV CRUD Management (Practical 9) -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-title">
+                <span>1. CSV Power Records CRUD (Practical 9: Add, Search, Update, Delete)</span>
+                <span class="brand-badge" id="csv-record-badge">-- Total Records</span>
+            </div>
+
+            <!-- Search Filter Bar -->
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+                <input type="text" id="search-date" class="form-control" placeholder="Search by Date (e.g. 2026-01-05)" style="max-width: 250px;">
+                <input type="number" id="search-min" class="form-control" placeholder="Min kWh" style="max-width: 130px;">
+                <input type="number" id="search-max" class="form-control" placeholder="Max kWh" style="max-width: 130px;">
+                <button class="btn btn-secondary btn-sm" onclick="filterCsvRecords()">🔍 Search Records</button>
+                <button class="btn btn-secondary btn-sm" onclick="loadCsvRecords()">Reset Filter</button>
+                <button class="btn btn-primary btn-sm" style="margin-left: auto;" onclick="toggleAddForm()">+ Add New CSV Record</button>
+            </div>
+
+            <!-- Add CSV Record Form Modal / Container -->
+            <div id="add-record-container" class="card" style="display: none; background-color: #f1f5f9; margin-bottom: 1.5rem; border: 1px dashed #94a3b8;">
+                <h4 style="margin-bottom: 0.75rem; font-size: 0.95rem;">Insert New Power Consumption Record (CSV)</h4>
+                <form id="add-csv-form" onsubmit="handleAddCsvRecord(event)">
+                    <div class="grid-4" style="margin-bottom: 0.75rem;">
+                        <div>
+                            <label class="form-label">Date</label>
+                            <input type="date" id="add-date" class="form-control" value="2026-01-16" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Time</label>
+                            <input type="time" id="add-time" class="form-control" value="12:00" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Hour (0-23)</label>
+                            <input type="number" id="add-hour" class="form-control" min="0" max="23" value="12" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Temperature (°C)</label>
+                            <input type="number" id="add-temp" class="form-control" step="0.1" value="26.4" required>
+                        </div>
+                    </div>
+                    <div class="grid-3" style="margin-bottom: 0.75rem;">
+                        <div>
+                            <label class="form-label">Previous Load (kWh)</label>
+                            <input type="number" id="add-prev" class="form-control" step="0.1" value="210.5" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Actual Consumption (kWh)</label>
+                            <input type="number" id="add-consumption" class="form-control" step="0.1" value="218.2" required>
+                        </div>
+                        <div style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                            <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Save Record</button>
+                            <button type="button" class="btn btn-secondary btn-sm" style="height: 38px;" onclick="toggleAddForm()">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CSV Records Table -->
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Row #</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Hour</th>
+                            <th>Temp (°C)</th>
+                            <th>Previous (kWh)</th>
+                            <th>Consumption (kWh)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="csv-records-tbody">
+                        <tr><td colspan="8" style="text-align: center;">Loading CSV records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2: MySQL CRUD Management (Practical 10) -->
+        <div class="card" style="margin-bottom: 2rem; border-left: 4px solid #0284c7;">
+            <div class="card-title">
+                <span>2. MySQL Relational Database CRUD (Practical 10)</span>
+                <span id="mysql-status-badge" class="brand-badge" style="background-color: #64748b;">Checking status...</span>
+            </div>
+            
+            <div id="mysql-alert" class="alert alert-warning">
+                <strong>MySQL Integration Status:</strong> <span id="mysql-alert-text">Checking connection...</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Table schema is defined in <code>database/schema.sql</code> (table: <code>power_records</code>). 
+                If MySQL server is active locally on port 3306, you can execute relational queries and CRUD operations.
+            </p>
+
+            <div class="table-responsive" id="mysql-table-wrapper" style="display: none;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Hour</th>
+                            <th>Temperature (°C)</th>
+                            <th>Previous Load (kWh)</th>
+                            <th>Consumption (kWh)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mysql-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 3: Text-File Activity Log CRUD (Practical 8) -->
+        <div class="card">
+            <div class="card-title">
+                <span>3. Text-File CRUD Operations (Practical 8: Activity Log File)</span>
+                <div>
+                    <button class="btn btn-secondary btn-sm" onclick="loadActivityLogs()">Refresh Log</button>
+                    <button class="btn btn-danger btn-sm" onclick="clearActivityLogs()">Clear Log</button>
+                </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                File path: <code>reports/activity_log.txt</code>. Demonstrates text-file Creation, Reading, Appending (Update), and Deletion.
+            </p>
+            <pre class="log-display" id="log-output">Loading activity logs...</pre>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>Power Consumption Forecasting & Analytics System | Power Consumption Forecasting and Analytics</p>
+        <p>Subject Code: BE05000231 (Python for Data Science)</p>
+    </footer>
+
+    <script>
+        // Load initial records
+        loadCsvRecords();
+        loadMysqlStatus();
+        loadActivityLogs();
+
+        function toggleAddForm() {
+            const form = document.getElementById('add-record-container');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function loadCsvRecords(searchQuery = '') {
+            const tbody = document.getElementById('csv-records-tbody');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Loading records...</td></tr>';
+
+            const url = searchQuery ? `/api/records?${searchQuery}` : '/api/records';
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('csv-record-badge').innerText = `${data.total_records} Total Records`;
+                        tbody.innerHTML = '';
+                        if (data.records.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No matching records found.</td></tr>';
+                            return;
+                        }
+
+                        data.records.forEach(row => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${row._row_id}</td>
+                                <td>${row.date}</td>
+                                <td>${row.time}</td>
+                                <td>${row.hour}</td>
+                                <td>${row.temperature} °C</td>
+                                <td>${row.previous_consumption} kWh</td>
+                                <td><strong>${row.consumption} kWh</strong></td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCsvRow(${row._row_id})">Delete</button>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                })
+                .catch(err => console.error('CSV load error:', err));
+        }
+
+        function filterCsvRecords() {
+            const d = document.getElementById('search-date').value.trim();
+            const min = document.getElementById('search-min').value.trim();
+            const max = document.getElementById('search-max').value.trim();
+
+            const params = new URLSearchParams();
+            if (d) params.append('date', d);
+            if (min) params.append('min', min);
+            if (max) params.append('max', max);
+
+            loadCsvRecords(params.toString());
+        }
+
+        function handleAddCsvRecord(e) {
+            e.preventDefault();
+            const dateVal = document.getElementById('add-date').value;
+            const timeVal = document.getElementById('add-time').value + ':00';
+            const hourVal = parseInt(document.getElementById('add-hour').value);
+            const d = new Date(dateVal);
+            const dayVal = d.getDate();
+            const monthVal = d.getMonth() + 1;
+            const dayOfWeekVal = (d.getDay() + 6) % 7; // 0=Monday
+
+            const payload = {
+                date: dateVal,
+                time: timeVal,
+                hour: hourVal,
+                day: dayVal,
+                month: monthVal,
+                day_of_week: dayOfWeekVal,
+                temperature: parseFloat(document.getElementById('add-temp').value),
+                previous_consumption: parseFloat(document.getElementById('add-prev').value),
+                consumption: parseFloat(document.getElementById('add-consumption').value)
+            };
+
+            fetch('/api/records/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Record appended to CSV successfully!');
+                    toggleAddForm();
+                    loadCsvRecords();
+                    loadActivityLogs();
+                } else {
+                    alert('Add record failed: ' + data.error);
+                }
+            })
+            .catch(err => alert('Request error: ' + err));
+        }
+
+        function deleteCsvRow(rowId) {
+            if (!confirm(`Are you sure you want to delete CSV record at row index ${rowId}?`)) return;
+
+            fetch('/api/records/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ row_id: rowId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    loadCsvRecords();
+                    loadActivityLogs();
+                } else {
+                    alert('Delete failed: ' + data.error);
+                }
+            })
+            .catch(err => alert('Delete request error: ' + err));
+        }
+
+        function loadMysqlStatus() {
+            fetch('/api/mysql-records')
+                .then(res => res.json())
+                .then(data => {
+                    const badge = document.getElementById('mysql-status-badge');
+                    const alertBox = document.getElementById('mysql-alert');
+                    const alertText = document.getElementById('mysql-alert-text');
+                    const wrapper = document.getElementById('mysql-table-wrapper');
+                    const tbody = document.getElementById('mysql-tbody');
+
+                    if (data.connected) {
+                        badge.innerText = 'Connected (MySQL Online)';
+                        badge.style.backgroundColor = '#15803d';
+                        alertBox.className = 'alert alert-success';
+                        alertText.innerText = `Connected to database '${data.database}' on ${data.host}:3306. Found ${data.records.length} records in power_records table.`;
+                        
+                        tbody.innerHTML = '';
+                        data.records.forEach(r => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${r.id}</td>
+                                <td>${r.record_date}</td>
+                                <td>${r.record_time}</td>
+                                <td>${r.hour}</td>
+                                <td>${r.temperature} °C</td>
+                                <td>${r.previous_consumption} kWh</td>
+                                <td><strong>${r.consumption} kWh</strong></td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                        wrapper.style.display = 'block';
+                    } else {
+                        badge.innerText = 'MySQL Server Offline / Unconfigured';
+                        badge.style.backgroundColor = '#b45309';
+                        alertBox.className = 'alert alert-warning';
+                        alertText.innerHTML = `
+                            <strong>Academic Notice:</strong> PyMySQL & schema.sql are implemented in <code>modules/database.py</code>. 
+                            If a local MySQL service is not running on port 3306, this is handled gracefully. 
+                            ${data.message}
+                        `;
+                    }
+                })
+                .catch(err => console.error('MySQL status error:', err));
+        }
+
+        function loadActivityLogs() {
+            fetch('/api/activity-logs')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('log-output').innerText = data.logs.join('\n');
+                    }
+                })
+                .catch(err => console.error('Activity logs error:', err));
+        }
+
+        function clearActivityLogs() {
+            if (!confirm('Clear the text activity log file (Practical 8 text delete)?')) return;
+            fetch('/api/clear-logs', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    loadActivityLogs();
+                })
+                .catch(err => console.error('Clear logs error:', err));
+        }
+    </script>
+</body>
+</html>

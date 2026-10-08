@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics & Inference - Power Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-top">
+            <a href="/" class="brand-title">
+                ⚡ Power Consumption Forecasting & Analytics
+            </a>
+            <div style="font-size: 0.85rem; color: #94a3b8;">
+                Pure Python Standard Library Server
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/data" class="nav-link">Data Inspection</a>
+                <a href="/preprocessing" class="nav-link">Preprocessing</a>
+                <a href="/statistics" class="nav-link active">Statistics & Inference</a>
+                <a href="/visualizations" class="nav-link">Visualizations</a>
+                <a href="/forecast" class="nav-link">ML Forecast</a>
+                <a href="/records" class="nav-link">CRUD Records</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Statistical Analysis, Probability & Hypothesis Testing</h1>
+            <p>Practicals 11, 12, 13, 18, 19, 20: Mathematical computations across NumPy, SciPy, and Pandas.</p>
+        </div>
+
+        <!-- Descriptive Statistics Grid -->
+        <div class="grid-4">
+            <div class="metric-box">
+                <div class="metric-label">Mean Consumption</div>
+                <div class="metric-value" id="stat-mean">--</div>
+                <div class="metric-sub">Average power demand</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Median Consumption</div>
+                <div class="metric-value" id="stat-median">--</div>
+                <div class="metric-sub">50th percentile (midpoint)</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Standard Deviation</div>
+                <div class="metric-value" id="stat-std">--</div>
+                <div class="metric-sub">Dispersion of load (kWh)</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Distribution Skewness</div>
+                <div class="metric-value" id="stat-skew">--</div>
+                <div class="metric-sub" id="stat-skew-sub">Symmetry measurement</div>
+            </div>
+        </div>
+
+        <!-- Section 1: NumPy Array Analytics (Practical 11) -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-title">1. NumPy Array Analytics (Practical 11)</div>
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Power consumption converted into a 1D NumPy array (<code>np.array(df['consumption'])</code>) for high-performance numerical calculations:
+            </p>
+            <div class="grid-3">
+                <div class="metric-box">
+                    <div class="metric-label">Total Consumption</div>
+                    <div class="metric-value" id="np-total" style="font-size: 1.4rem;">-- kWh</div>
+                    <div class="metric-sub">np.sum(array)</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Daytime Consumption (06-18h)</div>
+                    <div class="metric-value" id="np-daytime" style="font-size: 1.4rem;">--%</div>
+                    <div class="metric-sub" id="np-daytime-kwh">-- kWh total</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Nighttime Consumption (18-06h)</div>
+                    <div class="metric-value" id="np-nighttime" style="font-size: 1.4rem;">--%</div>
+                    <div class="metric-sub" id="np-nighttime-kwh">-- kWh total</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">Calculated Percentiles (np.percentile):</h4>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>10th Percentile</th>
+                                <th>25th (Q1)</th>
+                                <th>50th (Median)</th>
+                                <th>75th (Q3)</th>
+                                <th>90th Percentile</th>
+                                <th>95th Percentile</th>
+                                <th>99th Percentile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="percentiles-row">
+                                <td colspan="7" style="text-align: center;">Loading percentiles...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: SciPy Stats & Normal Distribution (Practical 12, 18) -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">2. SciPy Statistical Moments (Practical 12)</div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <tbody>
+                            <tr><td>Number of Observations (nobs)</td><td id="scipy-nobs">--</td></tr>
+                            <tr><td>Variance</td><td id="scipy-var">--</td></tr>
+                            <tr><td>Standard Error of the Mean (SEM)</td><td id="scipy-sem">--</td></tr>
+                            <tr><td>Kurtosis</td><td id="scipy-kurt">--</td></tr>
+                            <tr><td>Most Frequent Value (Mode)</td><td id="scipy-mode">-- kWh</td></tr>
+                            <tr><td>Shape Interpretation</td><td id="scipy-shape">--</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">3. Normal Distribution, PDF & CDF (Practical 18)</div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                    Fitted Gaussian Model: &mu; = <strong id="pdf-mu">--</strong>, &sigma; = <strong id="pdf-sigma">--</strong>.
+                </p>
+                <div class="alert alert-info" style="font-size: 0.85rem; padding: 0.75rem;">
+                    <strong>Evaluated Threshold Value:</strong> <span id="pdf-eval-val">--</span> kWh<br>
+                    <strong>PDF Density f(x):</strong> <span id="pdf-density">--</span><br>
+                    <strong>CDF P(X &le; threshold):</strong> <span id="cdf-val">--</span> (<span id="cdf-pct">--</span>%)<br>
+                    <strong>Tail Probability P(X &gt; threshold):</strong> <span id="tail-prob">--</span> (<span id="tail-pct" style="font-weight:bold; color:#1d4ed8;">--</span>%)
+                </div>
+                <p id="pdf-explanation" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+            </div>
+        </div>
+
+        <!-- Section 3: Sampling, 95% CI & CLT (Practical 19) -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-title">4. Sampling, 95% Confidence Interval & CLT (Practical 19)</div>
+            <div class="grid-2">
+                <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">Sample Estimates (n=50):</h4>
+                    <ul style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.8; padding-left: 1.25rem;">
+                        <li>Sample Mean (&macr;x): <strong id="sample-mean">--</strong> kWh</li>
+                        <li>Sample Std (s): <strong id="sample-std">--</strong> kWh</li>
+                        <li>Standard Error (s / &radic;n): <strong id="sample-sem">--</strong></li>
+                        <li><strong>95% Confidence Interval:</strong> [<span id="ci-low" style="color: #15803d; font-weight: bold;">--</span> kWh, <span id="ci-high" style="color: #15803d; font-weight: bold;">--</span> kWh]</li>
+                    </ul>
+                    <p id="ci-interpretation" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"></p>
+                </div>
+                <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">Central Limit Theorem (500 Draws, n=30):</h4>
+                    <ul style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.8; padding-left: 1.25rem;">
+                        <li>Simulated Mean of Means: <strong id="clt-mean">--</strong> kWh</li>
+                        <li>Simulated Std of Means: <strong id="clt-std">--</strong></li>
+                        <li>Theoretical SE (&sigma; / &radic;30): <strong id="clt-theory-se">--</strong></li>
+                        <li>CLT Verification: <span class="brand-badge" style="background-color: #166534;" id="clt-badge">Verified</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Hypothesis Testing (One-sample t-test - Practical 20) -->
+        <div class="card" style="border-left: 4px solid var(--accent);">
+            <div class="card-title">5. Hypothesis Testing: One-Sample Student's t-Test (Practical 20)</div>
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Statistical test comparing sample power consumption against an official grid benchmark of <strong>250.0 kWh</strong>.
+            </p>
+            <div class="grid-2">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <tbody>
+                            <tr><td><strong>Null Hypothesis (H0)</strong></td><td id="hypo-h0">--</td></tr>
+                            <tr><td><strong>Alternative Hypothesis (H1)</strong></td><td id="hypo-h1">--</td></tr>
+                            <tr><td>Benchmark Mean (&mu;0)</td><td>250.00 kWh</td></tr>
+                            <tr><td>Calculated t-Statistic</td><td id="hypo-t" style="font-weight: bold;">--</td></tr>
+                            <tr><td>Two-Tailed p-Value</td><td id="hypo-p" style="font-weight: bold;">--</td></tr>
+                            <tr><td>Significance Level (&alpha;)</td><td>0.05</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="alert alert-warning" id="hypo-decision-box">
+                        <strong>Statistical Decision:</strong> <span id="hypo-decision">--</span>
+                    </div>
+                    <p id="hypo-explanation" style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>Power Consumption Forecasting & Analytics System | Power Consumption Forecasting and Analytics</p>
+        <p>Subject Code: BE05000231 (Python for Data Science)</p>
+    </footer>
+
+    <script>
+        fetch('/api/statistics-summary')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const np = data.numpy_metrics;
+                    const sp = data.scipy_metrics;
+                    const pd = data.pandas_metrics.summary;
+                    const pr = data.probability_metrics;
+                    const sm = data.sampling_metrics;
+                    const ht = data.hypothesis_test;
+
+                    // Header stats
+                    document.getElementById('stat-mean').innerText = pd.mean + ' kWh';
+                    document.getElementById('stat-median').innerText = pd.median + ' kWh';
+                    document.getElementById('stat-std').innerText = pd.std + ' kWh';
+                    document.getElementById('stat-skew').innerText = sp.skewness;
+                    document.getElementById('stat-skew-sub').innerText = sp.distribution_shape;
+
+                    // NumPy
+                    document.getElementById('np-total').innerText = Number(np.total_kwh).toLocaleString() + ' kWh';
+                    document.getElementById('np-daytime').innerText = np.percentages.daytime_pct + '%';
+                    document.getElementById('np-daytime-kwh').innerText = Number(np.percentages.daytime_kwh).toLocaleString() + ' kWh';
+                    document.getElementById('np-nighttime').innerText = np.percentages.nighttime_pct + '%';
+                    document.getElementById('np-nighttime-kwh').innerText = Number(np.percentages.nighttime_kwh).toLocaleString() + ' kWh';
+
+                    const pRow = document.getElementById('percentiles-row');
+                    pRow.innerHTML = `
+                        <td>${np.percentiles.p10} kWh</td>
+                        <td>${np.percentiles.p25} kWh</td>
+                        <td><strong>${np.percentiles.p50} kWh</strong></td>
+                        <td>${np.percentiles.p75} kWh</td>
+                        <td>${np.percentiles.p90} kWh</td>
+                        <td>${np.percentiles.p95} kWh</td>
+                        <td>${np.percentiles.p99} kWh</td>
+                    `;
+
+                    // SciPy
+                    document.getElementById('scipy-nobs').innerText = sp.nobs;
+                    document.getElementById('scipy-var').innerText = sp.variance;
+                    document.getElementById('scipy-sem').innerText = sp.sem;
+                    document.getElementById('scipy-kurt').innerText = sp.kurtosis;
+                    document.getElementById('scipy-mode').innerText = sp.mode + ' kWh';
+                    document.getElementById('scipy-shape').innerText = sp.distribution_shape;
+
+                    // Normal Distribution
+                    document.getElementById('pdf-mu').innerText = pr.fitted_mean_mu + ' kWh';
+                    document.getElementById('pdf-sigma').innerText = pr.fitted_std_sigma + ' kWh';
+                    document.getElementById('pdf-eval-val').innerText = pr.evaluated_value;
+                    document.getElementById('pdf-density').innerText = pr.pdf_density;
+                    document.getElementById('cdf-val').innerText = pr.cdf_probability_less_than_x;
+                    document.getElementById('cdf-pct').innerText = pr.cdf_percentage_less;
+                    document.getElementById('tail-prob').innerText = pr.probability_exceeds_threshold;
+                    document.getElementById('tail-pct').innerText = pr.percentage_exceeds_threshold + '%';
+                    document.getElementById('pdf-explanation').innerText = pr.explanation;
+
+                    // Sampling & CLT
+                    document.getElementById('sample-mean').innerText = sm.sample_mean;
+                    document.getElementById('sample-std').innerText = sm.sample_std;
+                    document.getElementById('sample-sem').innerText = sm.standard_error_of_mean;
+                    document.getElementById('ci-low').innerText = sm.ci_95_lower;
+                    document.getElementById('ci-high').innerText = sm.ci_95_upper;
+                    document.getElementById('ci-interpretation').innerText = sm.interpretation;
+
+                    document.getElementById('clt-mean').innerText = sm.clt_simulation.simulated_mean_of_means;
+                    document.getElementById('clt-std').innerText = sm.clt_simulation.simulated_std_of_means;
+                    document.getElementById('clt-theory-se').innerText = sm.clt_simulation.theoretical_standard_error;
+
+                    // Hypothesis Testing
+                    document.getElementById('hypo-h0').innerText = ht.null_hypothesis_h0;
+                    document.getElementById('hypo-h1').innerText = ht.alternative_hypothesis_h1;
+                    document.getElementById('hypo-t').innerText = ht.t_statistic;
+                    document.getElementById('hypo-p').innerText = ht.p_value;
+                    document.getElementById('hypo-decision').innerText = ht.decision;
+                    document.getElementById('hypo-explanation').innerText = ht.explanation;
+                }
+            })
+            .catch(err => console.error('Stats error:', err));
+    </script>
+</body>
+</html>

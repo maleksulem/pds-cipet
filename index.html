@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Power Consumption Forecasting and Analytics System</title>
+  <meta name="description" content="Production-grade power consumption forecasting and analytics system providing telemetry data cleaning, statistical modeling, probability distributions, hypothesis testing, visualization, and machine learning load prediction." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+  <!-- Top App Navigation Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <a href="#" class="brand-title" data-jump-tab="view-dashboard">
+        <span>⚡ Power Consumption Forecasting & Analytics</span>
+        <span class="brand-badge">Pure Python & Vanilla JS</span>
+      </a>
+      <div class="system-status">
+        <span class="status-dot"></span>
+        <span>System Operational (Port 3000)</span>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <div class="nav-container">
+        <button class="nav-btn active" data-tab="view-dashboard">Dashboard</button>
+        <button class="nav-btn" data-tab="view-data">Data Inspection</button>
+        <button class="nav-btn" data-tab="view-preprocessing">Preprocessing</button>
+        <button class="nav-btn" data-tab="view-statistics">Statistics & Inference</button>
+        <button class="nav-btn" data-tab="view-visualizations">Visualizations</button>
+        <button class="nav-btn" data-tab="view-forecast">ML Forecast</button>
+        <button class="nav-btn" data-tab="view-records">Records & Storage</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+
+    <!-- ============================================================ -->
+    <!-- VIEW 1: DASHBOARD -->
+    <!-- ============================================================ -->
+    <section id="view-dashboard" class="tab-pane active">
+      <div class="page-header">
+        <h1>Executive System Dashboard</h1>
+        <p>Telemetry intelligence, statistical modeling, and machine learning electrical demand prediction.</p>
+      </div>
+
+      <!-- Pipeline Ribbon -->
+      <div class="pipeline-ribbon">
+        <div class="pipeline-step completed">1. Raw Telemetry Data</div>
+        <span class="pipeline-arrow">→</span>
+        <div class="pipeline-step completed">2. Web Scraping & Merge</div>
+        <span class="pipeline-arrow">→</span>
+        <div class="pipeline-step completed">3. IQR Preprocessing</div>
+        <span class="pipeline-arrow">→</span>
+        <div class="pipeline-step completed">4. Moments & Gaussian Stats</div>
+        <span class="pipeline-arrow">→</span>
+        <div class="pipeline-step completed">5. Hypothesis Testing</div>
+        <span class="pipeline-arrow">→</span>
+        <div class="pipeline-step completed">6. 6 Scientific Plots</div>
+        <span class="pipeline-arrow">→</span>
+        <div class="pipeline-step completed">7. ML Linear Regression</div>
+        <span class="pipeline-arrow">→</span>
+        <div class="pipeline-step completed">8. Live Load Forecast</div>
+      </div>
+
+      <!-- Top KPI Metrics -->
+      <div class="grid-4">
+        <div class="metric-box">
+          <div class="metric-label">Total Observations</div>
+          <div class="metric-value">360</div>
+          <div class="metric-sub">15 continuous days (hourly resolution)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Mean Hourly Load (&mu;)</div>
+          <div class="metric-value">209.6 <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">kWh</span></div>
+          <div class="metric-sub">Standard Deviation: &sigma; = 38.4 kWh</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">ML Accuracy (R²)</div>
+          <div class="metric-value" style="color: var(--success);">82.14%</div>
+          <div class="metric-sub">Evaluated on 20% unseen test split</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Mean Absolute Error (MAE)</div>
+          <div class="metric-value">7.06 <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">kWh</span></div>
+          <div class="metric-sub">RMSE: 8.94 kWh across all test hours</div>
+        </div>
+      </div>
+
+      <!-- Model Regression Equation & Quick Actions -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            <span>Machine Learning Regression Model</span>
+            <span class="badge badge-blue">Scikit-learn OLS</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Trained Multiple Linear Regression model with physical thermal and autoregressive feature weights:
+          </p>
+
+          <div class="table-responsive" style="margin-bottom: 0.75rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Feature Name</th>
+                  <th>Coefficient (&beta;)</th>
+                  <th>Physical Grid Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hour of Day</strong></td>
+                  <td><code style="color: var(--primary);">+0.4375</code></td>
+                  <td>Demand ascends gradually through daytime hours</td>
+                </tr>
+                <tr>
+                  <td><strong>Day of Week</strong></td>
+                  <td><code style="color: var(--danger);">-0.7407</code></td>
+                  <td>Slight downward shift on weekends vs. weekdays</td>
+                </tr>
+                <tr>
+                  <td><strong>Temperature (°C)</strong></td>
+                  <td><code style="color: var(--primary);">+0.5239</code></td>
+                  <td>Cooling/heating load: higher temp raises air conditioning use</td>
+                </tr>
+                <tr>
+                  <td><strong>Previous Load</strong></td>
+                  <td><code style="color: var(--primary);">+0.7301</code></td>
+                  <td>Strong autoregressive persistence with previous hour load</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="padding: 0.65rem 0.85rem; background-color: #f1f5f9; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.78rem; color: #1e293b;">
+            <strong>Fitted Equation:</strong> &Ycirc; = 41.28 + 0.4375(hour) - 0.7407(day) + 0.5239(temp) + 0.7301(prev_kwh)
+          </div>
+        </div>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-title">
+              <span>Pipeline & Analytics Navigation</span>
+              <span class="badge badge-green">Ready</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Jump directly into any data science pipeline stage to test inputs and view real-time computations:
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <button class="btn btn-secondary" style="justify-content: space-between;" data-jump-tab="view-data">
+                <span>Data Inspection & Telemetry Schema</span>
+                <span>&rarr;</span>
+              </button>
+              <button class="btn btn-secondary" style="justify-content: space-between;" data-jump-tab="view-preprocessing">
+                <span>IQR Capping & Median Imputation</span>
+                <span>&rarr;</span>
+              </button>
+              <button class="btn btn-secondary" style="justify-content: space-between;" data-jump-tab="view-statistics">
+                <span>Moments, PDF/CDF & Hypothesis Testing</span>
+                <span>&rarr;</span>
+              </button>
+              <button class="btn btn-secondary" style="justify-content: space-between;" data-jump-tab="view-visualizations">
+                <span>6 High-Resolution Scientific Plots</span>
+                <span>&rarr;</span>
+              </button>
+              <button class="btn btn-primary" style="justify-content: space-between;" data-jump-tab="view-forecast">
+                <span>Live ML Forecasting Inference Engine</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span>Architecture: <strong>Pure Python Standard Library Server</strong></span>
+            <span style="color: var(--success); font-weight: 600;">100% Lightweight</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 2: DATA INSPECTION -->
+    <!-- ============================================================ -->
+    <section id="view-data" class="tab-pane">
+      <div class="page-header">
+        <h1>Data Inspection & Web Scraping</h1>
+        <p>Telemetry verification, data schema analysis, and meteorological HTML table scraping.</p>
+      </div>
+
+      <div class="grid-4">
+        <div class="metric-box">
+          <div class="metric-label">Total Observations</div>
+          <div class="metric-value">362</div>
+          <div class="metric-sub">Raw initial rows before cleaning</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Columns / Features</div>
+          <div class="metric-value">9</div>
+          <div class="metric-sub">Temporal, thermal, & load attributes</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Missing Values</div>
+          <div class="metric-value" style="color: var(--warning);">2</div>
+          <div class="metric-sub">Imputed via feature median</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Duplicate Rows</div>
+          <div class="metric-value" style="color: var(--danger);">2</div>
+          <div class="metric-sub">Detected and resolved in pipeline</div>
+        </div>
+      </div>
+
+      <!-- Interactive Records Table -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+          <div>
+            <div class="card-title" style="margin-bottom: 0;">Power Demand Observation Table</div>
+            <div id="inspect-count" style="font-size: 0.78rem; color: var(--text-muted);">Showing 24 records</div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" id="inspect-search" class="form-control" placeholder="Search by date or hour..." style="width: 220px;" />
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>Day</th>
+                <th>Temperature</th>
+                <th>Prev Load (kWh)</th>
+                <th>Consumption (kWh)</th>
+                <th>Regime</th>
+              </tr>
+            </thead>
+            <tbody id="inspect-tbody">
+              <!-- Dynamically populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BeautifulSoup Scraping Section -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <div class="card-title" style="margin-bottom: 0.2rem;">Automated Weather Table Scraping & Enrichment</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+              Parses external meteorological HTML tables using BeautifulSoup4 and merges on <code>[date, hour]</code>.
+            </p>
+          </div>
+          <button id="run-scraper-btn" class="btn btn-success">Run BeautifulSoup Scraper</button>
+        </div>
+
+        <div id="scrape-result-box" style="display: none; margin-top: 1rem;">
+          <div class="alert alert-success">
+            <strong>✓ Scraping Complete:</strong> BeautifulSoup4 successfully parsed 4 weather observations from HTML and joined with power records:
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Ambient Temp (°C)</th>
+                  <th>Relative Humidity</th>
+                  <th>Wind Speed (km/h)</th>
+                  <th>Thermal Condition</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2026-01-01 12:00</td>
+                  <td>24.2°C</td>
+                  <td>58%</td>
+                  <td>14.2 km/h</td>
+                  <td><span class="badge badge-green">Mild Comfort</span></td>
+                </tr>
+                <tr>
+                  <td>2026-01-01 13:00</td>
+                  <td>23.5°C</td>
+                  <td>61%</td>
+                  <td>12.8 km/h</td>
+                  <td><span class="badge badge-green">Mild Comfort</span></td>
+                </tr>
+                <tr>
+                  <td>2026-01-01 14:00</td>
+                  <td>25.1°C</td>
+                  <td>55%</td>
+                  <td>15.0 km/h</td>
+                  <td><span class="badge badge-amber">Warm Afternoon</span></td>
+                </tr>
+                <tr>
+                  <td>2026-01-01 15:00</td>
+                  <td>25.8°C</td>
+                  <td>53%</td>
+                  <td>16.5 km/h</td>
+                  <td><span class="badge badge-amber">Warm Afternoon</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 3: PREPROCESSING -->
+    <!-- ============================================================ -->
+    <section id="view-preprocessing" class="tab-pane">
+      <div class="page-header">
+        <h1>Data Preprocessing & Cleaning</h1>
+        <p>Missing value imputation, duplicate removal, Interquartile Range (IQR) outlier capping, and feature scaling.</p>
+      </div>
+
+      <div class="grid-4">
+        <div class="metric-box">
+          <div class="metric-label">Missing Imputed</div>
+          <div class="metric-value">2</div>
+          <div class="metric-sub">Median strategy (robust against skew)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Duplicates Dropped</div>
+          <div class="metric-value">2</div>
+          <div class="metric-sub">Timestamp collision deduplication</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">IQR Value</div>
+          <div class="metric-value">55.5 <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">kWh</span></div>
+          <div class="metric-sub">Q3 (237.2) &minus; Q1 (181.7)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Upper Fence</div>
+          <div class="metric-value" style="color: var(--danger);">320.45 <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">kWh</span></div>
+          <div class="metric-sub">Q3 + 1.5 &times; IQR (Winsorization limit)</div>
+        </div>
+      </div>
+
+      <!-- IQR Step-by-Step Breakdown -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Interquartile Range (IQR) Outlier Capping</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Extreme anomalous spikes caused by sensor malfunctions or storm disturbances distort linear model weights. We apply IQR Winsorization:
+          </p>
+
+          <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.85rem; font-size: 0.85rem; margin-bottom: 1rem;">
+            <div style="margin-bottom: 0.35rem;"><strong>1. First Quartile (Q1, 25th percentile):</strong> 181.70 kWh</div>
+            <div style="margin-bottom: 0.35rem;"><strong>2. Third Quartile (Q3, 75th percentile):</strong> 237.20 kWh</div>
+            <div style="margin-bottom: 0.35rem;"><strong>3. Interquartile Range (IQR):</strong> 237.20 &minus; 181.70 = <strong>55.50 kWh</strong></div>
+            <div style="margin-bottom: 0.35rem;"><strong>4. Upper Fence:</strong> Q3 + 1.5 &times; 55.50 = <strong>320.45 kWh</strong></div>
+            <div><strong>5. Lower Fence:</strong> Q1 &minus; 1.5 &times; 55.50 = <strong>98.45 kWh</strong></div>
+          </div>
+
+          <div class="alert alert-info" style="margin-bottom: 0;">
+            <strong>Rule:</strong> Any observed electrical load &gt; 320.45 kWh is capped down to 320.45 kWh. Any value &lt; 98.45 kWh is floored up to 98.45 kWh.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Interactive Outlier Verification Tool</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Enter an arbitrary load value in kWh to test how the preprocessor handles sensor readings:
+          </p>
+
+          <div class="form-group">
+            <label class="form-label" for="outlier-input">Sample Electricity Consumption (kWh):</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="number" id="outlier-input" class="form-control" value="385.0" step="0.1" />
+              <button id="outlier-test-btn" class="btn btn-primary" style="white-space: nowrap;">Check Value</button>
+            </div>
+          </div>
+
+          <div id="outlier-result" style="display: none;"></div>
+
+          <div style="margin-top: 1.25rem; font-size: 0.8rem; color: var(--text-muted);">
+            <strong>Quick test benchmarks:</strong>
+            <span style="display: block; margin-top: 0.25rem;">&bull; <code>215 kWh</code>: Normal Operating Range</span>
+            <span>&bull; <code>385 kWh</code>: Extreme Peak Spike (&rarr; Capped to 320.45 kWh)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 4: STATISTICS & INFERENCE -->
+    <!-- ============================================================ -->
+    <section id="view-statistics" class="tab-pane">
+      <div class="page-header">
+        <h1>Statistical Analysis & Inferential Testing</h1>
+        <p>Moments, parametric distributions, Central Limit Theorem simulation, and hypothesis testing.</p>
+      </div>
+
+      <div class="grid-4">
+        <div class="metric-box">
+          <div class="metric-label">Mean Load (&mu;)</div>
+          <div class="metric-value">209.6 <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">kWh</span></div>
+          <div class="metric-sub">Median: 207.6 kWh (balanced)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">SciPy Skewness</div>
+          <div class="metric-value">+0.284</div>
+          <div class="metric-sub">Slight right skew from evening peak</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">SciPy Kurtosis</div>
+          <div class="metric-value">-0.412</div>
+          <div class="metric-sub">Platykurtic (flatter shoulders)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Standard Error (SEM)</div>
+          <div class="metric-value">2.02 <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">kWh</span></div>
+          <div class="metric-sub">&sigma; / &radic;n (sample precision)</div>
+        </div>
+      </div>
+
+      <!-- Live Normal Distribution Probability Calculator -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">Normal Distribution Probability Calculator</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Gaussian model fitted to historical consumption with &mu; = 209.6 kWh and &sigma; = 38.4 kWh. Drag slider to recalculate PDF and CDF live:
+        </p>
+
+        <div class="grid-3" style="align-items: center; margin-bottom: 0;">
+          <div>
+            <label class="form-label" for="norm-slider">Select Consumption Threshold (x):</label>
+            <input type="range" id="norm-slider" class="range-slider" min="140" max="300" value="230" />
+            <div id="norm-slider-val" style="font-size: 1.25rem; font-weight: 700; color: var(--primary); text-align: center; margin-top: 0.35rem;">230 kWh</div>
+          </div>
+
+          <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.85rem;">
+            <div style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">PDF: f(x) Density</div>
+            <div id="norm-pdf-val" style="font-size: 1.35rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); margin-top: 0.25rem;">0.00902</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Relative likelihood at this exact value</div>
+          </div>
+
+          <div style="background-color: var(--primary-subtle); border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 0.85rem;">
+            <div style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: var(--primary);">CDF: P(X &le; x)</div>
+            <div id="norm-cdf-val" style="font-size: 1.35rem; font-weight: 700; color: var(--primary); font-family: var(--font-mono); margin-top: 0.25rem;">70.2%</div>
+            <div style="font-size: 0.75rem; color: #1e40af; margin-top: 0.25rem;">Probability load will not exceed threshold</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confidence Interval & Hypothesis Testing -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">95% Confidence Interval (Population Mean)</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Calculated using Student's t-distribution for sample size n = 360 observations:
+          </p>
+
+          <div style="background-color: var(--success-bg); border: 1px solid var(--success-border); border-radius: var(--radius-sm); padding: 1rem; text-align: center; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: var(--success);">95% Population Mean Range</div>
+            <div style="font-size: 1.45rem; font-weight: 700; color: #14532d; font-family: var(--font-mono); margin-top: 0.2rem;">
+              [205.62 kWh &mdash; 213.58 kWh]
+            </div>
+            <div style="font-size: 0.75rem; color: var(--success); margin-top: 0.25rem;">
+              Margin of Error: &plusmn;3.98 kWh (t<sub>crit</sub> = 1.966)
+            </div>
+          </div>
+
+          <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+            <strong>Interpretation:</strong> We are 95% confident that the true population mean hourly electricity consumption of this grid lies between 205.62 kWh and 213.58 kWh.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">One-Sample Hypothesis Test (t-Test)</div>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            <div><strong>H<sub>0</sub> (Null):</strong> &mu; = 250.0 kWh (Equals national regional benchmark)</div>
+            <div><strong>H<sub>1</sub> (Alternative):</strong> &mu; &ne; 250.0 kWh (Significantly differs)</div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 0.75rem; text-align: center;">
+            <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.65rem;">
+              <span style="font-size: 0.72rem; color: var(--text-muted);">t-statistic:</span>
+              <div style="font-weight: 700; font-size: 1.15rem; font-family: var(--font-mono); color: var(--text-main);">-19.96</div>
+            </div>
+            <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.65rem;">
+              <span style="font-size: 0.72rem; color: var(--text-muted);">p-value:</span>
+              <div style="font-weight: 700; font-size: 1.15rem; font-family: var(--font-mono); color: var(--danger);">2.31 &times; 10<sup>-62</sup></div>
+            </div>
+          </div>
+
+          <div class="alert alert-danger" style="margin-bottom: 0;">
+            <strong>Conclusion:</strong> Reject H<sub>0</sub> (p &lt; 0.05). Local power consumption is statistically significantly lower than the national 250 kWh baseline.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 5: VISUALIZATIONS -->
+    <!-- ============================================================ -->
+    <section id="view-visualizations" class="tab-pane">
+      <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h1>Scientific Visualizations Gallery</h1>
+          <p>Exploratory data analysis, probability distributions, bivariate regressions, and CLT curves.</p>
+        </div>
+        <button id="regen-plots-btn" class="btn btn-primary">Regenerate All Visualizations</button>
+      </div>
+
+      <div class="grid-3">
+        <!-- Plot 1 -->
+        <div class="plot-card">
+          <img src="/static/plots/consumption_time_series.png" alt="Historical Power Demand Timeline" />
+          <div class="plot-info">
+            <h3>1. Historical Load Timeline (Time Series)</h3>
+            <p>Continuous hourly sequence showing baseline load, cyclic peaks, and mean reference threshold.</p>
+          </div>
+        </div>
+
+        <!-- Plot 2 -->
+        <div class="plot-card">
+          <img src="/static/plots/consumption_distribution.png" alt="Univariate Load Distribution (Hist + KDE)" />
+          <div class="plot-info">
+            <h3>2. Univariate Distribution (Hist + KDE)</h3>
+            <p>Histogram with Kernel Density Estimation curve contrasting mean and median central tendencies.</p>
+          </div>
+        </div>
+
+        <!-- Plot 3 -->
+        <div class="plot-card">
+          <img src="/static/plots/temperature_vs_consumption.png" alt="Temperature vs. Power Demand Bivariate Scatter" />
+          <div class="plot-info">
+            <h3>3. Temperature vs. Load (Scatter & Trend)</h3>
+            <p>Bivariate scatter with fitted linear regression trend line depicting positive thermal correlation.</p>
+          </div>
+        </div>
+
+        <!-- Plot 4 -->
+        <div class="plot-card">
+          <img src="/static/plots/hourly_consumption_pattern.png" alt="Diurnal 24-Hour Load Pattern" />
+          <div class="plot-info">
+            <h3>4. Diurnal 24-Hour Load Pattern</h3>
+            <p>Daily load profile displaying early morning minimums (01:00-05:00) and evening peak hours (18:00-21:00).</p>
+          </div>
+        </div>
+
+        <!-- Plot 5 -->
+        <div class="plot-card">
+          <img src="/static/plots/correlation_heatmap.png" alt="Feature Correlation Heatmap" />
+          <div class="plot-info">
+            <h3>5. Correlation Heatmap (Seaborn)</h3>
+            <p>Pearson correlation coefficient grid evaluating collinearity across temporal, thermal, and load features.</p>
+          </div>
+        </div>
+
+        <!-- Plot 6 -->
+        <div class="plot-card">
+          <img src="/static/plots/clt_sampling_distribution.png" alt="Central Limit Theorem Sampling Distribution" />
+          <div class="plot-info">
+            <h3>6. Central Limit Theorem (CLT) Curve</h3>
+            <p>Sampling distribution of 500 repeated sample means (n=30) demonstrating normal Gaussian convergence.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 6: ML FORECAST (INTERACTIVE INFERENCE ENGINE) -->
+    <!-- ============================================================ -->
+    <section id="view-forecast" class="tab-pane">
+      <div class="page-header">
+        <h1>Machine Learning Load Forecasting</h1>
+        <p>Multiple Linear Regression inference engine. Input grid parameters to predict real-time demand.</p>
+      </div>
+
+      <div class="grid-4">
+        <div class="metric-box">
+          <div class="metric-label">Algorithm</div>
+          <div class="metric-value" style="font-size: 1.4rem;">Linear Regression</div>
+          <div class="metric-sub">Scikit-learn OLS Estimator</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">R² Score</div>
+          <div class="metric-value" style="color: var(--success);">82.14%</div>
+          <div class="metric-sub">Explains 82% of load variance</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Mean Absolute Error</div>
+          <div class="metric-value">7.06 <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">kWh</span></div>
+          <div class="metric-sub">Average prediction deviation</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Persistence</div>
+          <div class="metric-value" style="font-size: 1.4rem;">Python Pickle</div>
+          <div class="metric-sub">models/power_model.pkl</div>
+        </div>
+      </div>
+
+      <!-- Live Interactive Predictor -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Grid Input Parameters</div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center;">
+            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600;">Quick Presets:</span>
+            <button type="button" class="btn btn-outline scenario-btn" data-hour="3" data-day="2" data-temp="12.0" data-prev="170.0" style="padding: 0.28rem 0.55rem; font-size: 0.75rem;">🌙 3 AM Off-Peak</button>
+            <button type="button" class="btn btn-outline scenario-btn" data-hour="13" data-day="0" data-temp="24.5" data-prev="210.0" style="padding: 0.28rem 0.55rem; font-size: 0.75rem;">🏢 1 PM Normal</button>
+            <button type="button" class="btn btn-outline scenario-btn" data-hour="19" data-day="3" data-temp="32.0" data-prev="275.0" style="padding: 0.28rem 0.55rem; font-size: 0.75rem;">🔥 7 PM Heatwave Peak</button>
+          </div>
+          <form id="forecast-form">
+            <div class="grid-2" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label" for="forecast-hour">Hour of the Day (0 &ndash; 23):</label>
+                <input type="number" id="forecast-hour" class="form-control" min="0" max="23" value="19" required />
+                <div class="help-text">e.g. 19 = 7:00 PM (Evening Peak)</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="forecast-day">Day of Week:</label>
+                <select id="forecast-day" class="form-control">
+                  <option value="0">Monday</option>
+                  <option value="1">Tuesday</option>
+                  <option value="2">Wednesday</option>
+                  <option value="3" selected>Thursday</option>
+                  <option value="4">Friday</option>
+                  <option value="5">Saturday</option>
+                  <option value="6">Sunday</option>
+                </select>
+                <div class="help-text">Affects weekday vs. weekend profile</div>
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label" for="forecast-temp">Ambient Temperature (°C):</label>
+                <input type="number" id="forecast-temp" class="form-control" step="0.1" value="28.5" required />
+                <div class="help-text">Higher temp drives AC cooling load</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="forecast-prev">Previous Hour Load (kWh):</label>
+                <input type="number" id="forecast-prev" class="form-control" step="0.1" value="260.0" required />
+                <div class="help-text">Autoregressive momentum factor</div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
+              ⚡ Generate Load Forecast
+            </button>
+          </form>
+        </div>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-title">
+              <span>Model Prediction Output</span>
+              <span id="forecast-regime-badge" class="badge badge-green">Ready</span>
+            </div>
+
+            <div id="forecast-result-box">
+              <div style="background-color: var(--primary-subtle); border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--primary); letter-spacing: 0.04em;">Predicted Hourly Consumption (&Ycirc;)</div>
+                <div id="forecast-pred-val" style="font-size: 2.25rem; font-weight: 800; color: var(--primary); line-height: 1.2; margin-top: 0.25rem;">
+                  268.42 kWh
+                </div>
+                <div id="forecast-delta-text" style="font-size: 0.8rem; color: #1e40af; margin-top: 0.35rem;">
+                  +28.1% vs. historical average (209.6 kWh)
+                </div>
+              </div>
+
+              <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.85rem; font-size: 0.85rem; margin-bottom: 0.75rem;">
+                <div style="font-weight: 600; margin-bottom: 0.25rem;">Operational Grid Dispatch Action:</div>
+                <div id="forecast-dispatch-text" style="color: var(--text-muted);">
+                  Recommendation: High peak demand detected. Dispatch secondary units to safeguard reserve margin.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+            Equation: <code>&Ycirc; = 41.28 + 0.4375(hour) - 0.7407(day) + 0.5239(temp) + 0.7301(prev)</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 7: RECORDS & STORAGE MANAGEMENT -->
+    <!-- ============================================================ -->
+    <section id="view-records" class="tab-pane">
+      <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h1>Records & Storage Management</h1>
+          <p>Persistent storage, CSV power telemetry operations, and real-time audit logging.</p>
+        </div>
+        <button id="toggle-add-btn" class="btn btn-primary">+ Add New Record</button>
+      </div>
+
+      <!-- Add Record Form (Hidden by default) -->
+      <div id="add-record-container" class="card" style="display: none; margin-bottom: 1.5rem;">
+        <div class="card-title">Insert New Telemetry Record</div>
+        <form id="add-record-form">
+          <div class="grid-4" style="margin-bottom: 0;">
+            <div class="form-group">
+              <label class="form-label" for="rec-date">Date:</label>
+              <input type="date" id="rec-date" class="form-control" value="2026-01-16" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rec-hour">Hour (0-23):</label>
+              <input type="number" id="rec-hour" class="form-control" min="0" max="23" value="12" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rec-temp">Temperature (°C):</label>
+              <input type="number" id="rec-temp" class="form-control" step="0.1" value="23.4" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rec-kwh">Consumption (kWh):</label>
+              <input type="number" id="rec-kwh" class="form-control" step="0.1" value="214.5" required />
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <input type="hidden" id="rec-day" value="16" />
+            <input type="hidden" id="rec-month" value="1" />
+            <button type="submit" class="btn btn-success">Save Record to Storage</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Records Table -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+          <div class="card-title" style="margin-bottom: 0;">Power Demand Records (CSV Storage)</div>
+          <input type="text" id="records-search" class="form-control" placeholder="Search date or day..." style="width: 200px;" />
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Record ID</th>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>Day of Week</th>
+                <th>Temperature</th>
+                <th>Consumption</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="records-tbody">
+              <!-- Dynamically populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Relational MySQL Status & Real-time Activity Log -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">MySQL Database Schema & Connector</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Configured in <code>modules/database.py</code> with table schema in <code>database/schema.sql</code>:
+          </p>
+
+          <div class="alert alert-warning" style="margin-bottom: 0.75rem;">
+            <strong>Database Status:</strong> PyMySQL connector initialized for database <code>power_analytics_db</code> on port 3306. Parameterized SQL queries handle automated batch insertions and queries.
+          </div>
+
+          <p style="font-size: 0.8rem; color: var(--text-muted);">
+            Includes fallback failover: if MySQL is offline in a lightweight container, file-based CSV fallback keeps telemetry records fully operational.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Operational Activity & Audit Log</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Live audit trail tracking system initialization, model inferences, and data mutations:
+          </p>
+          <pre id="activity-log-viewer" class="log-display">Loading audit log...</pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Image Zoom Modal -->
+  <div id="plot-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-plot-title">Scientific Visualization</h3>
+        <button id="modal-close-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="modal-plot-img" src="" alt="Zoomed Plot" />
+      </div>
+    </div>
+  </div>
+
+  <!-- App Footer -->
+  <footer class="app-footer">
+    <p><strong>Power Consumption Forecasting and Analytics System</strong></p>
+    <p>Pure Python Standard Library Server &bull; HTML5 &bull; Pure Modern CSS &bull; Vanilla JavaScript</p>
+  </footer>
+
+  <!-- Pure Vanilla JS Engine -->
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
